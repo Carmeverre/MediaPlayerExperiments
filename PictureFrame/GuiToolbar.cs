@@ -1,11 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Drawing;
-//using WIA;
 
 
 namespace PictureFrame
@@ -23,10 +18,6 @@ namespace PictureFrame
         public ButtonZoom1 tsbZoomTo1;
         public ButtonZoomFit tsbZoomToFit;
         public ButtonGridToggle tsbGrid;
-        //public ToolStripTextBox tstbStatus;
-        //public ButtonScannerInterface tsbScanner;
-        //public ButtonResetCB tsbResetCB;
-        //public ButtonAnalyze tsbAnalyze;
 
         public GUIToolbar()
             : base()
@@ -35,11 +26,9 @@ namespace PictureFrame
             tsbZoomTo1 = new ButtonZoom1();
             tsbZoomToFit = new ButtonZoomFit();
             tsbGrid = new ButtonGridToggle();
-            //tsbScanner = new ButtonScannerInterface();
-            //tsbResetCB = new ButtonResetCB();
-            //tsbAnalyze = new ButtonAnalyze();
+
             // NOTE: changing order in the following line is enough to reorder the toolbar
-            Items.AddRange(new ToolStripItem[] { tsbNewImg, /*tsbScanner,*/ /*tsbResetCB,*/ tsbZoomToFit, tsbZoomTo1, tsbGrid, /*tsbAnalyze*/ }); // todo: order them more sensibly...
+            Items.AddRange(new ToolStripItem[] { tsbNewImg, tsbZoomToFit, tsbZoomTo1, tsbGrid});
             this.Size = new Size(400, 64); // don't think it worked...
             this.ImageScalingSize = new Size(48, 48); // a bit too big? // note: original icon size 64x64 // note: this is the property that actually affects image size
             InitButtons();
@@ -86,33 +75,6 @@ namespace PictureFrame
             tsbGrid.Text = "Show Grid";
             tsbGrid.Image = Properties.Resources.tsb_uni_grid_show; // this one is switched on click, so it's like a toggle
             tsbGrid.AutoSize = false;
-
-            //// todo: don't know if any other properties need be set for the new buttons. They may be unnecessary for other buttons as well
-            //// scan image
-            //tsbScanner.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            //tsbScanner.Size = buttonSize;
-            //tsbScanner.Text = "Scan Image";
-            //tsbScanner.Image = Properties.Resources.tsb_uni_img_from_scan;
-            //tsbScanner.AutoSize = false;
-
-            //// reset contrast/brightness
-            //tsbResetCB.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            //tsbResetCB.Size = buttonSize;
-            //tsbResetCB.Text = "Reset Contrast/Brightness";
-            //tsbResetCB.Image = Properties.Resources.tsb_uni_contrast_brightness_reset;
-            //tsbResetCB.AutoSize = false;
-
-            //// status text box
-            //tstbStatus.Name = "toolStripTextBox1";
-            //tstbStatus.ReadOnly = true;
-            //tstbStatus.Size = new System.Drawing.Size(380, 32);
-
-            //// analyze button. todo: image and such
-            //tsbAnalyze.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            //tsbAnalyze.Size = buttonSize;
-            //tsbAnalyze.Text = "Analyze Defects"; // option: just 'Analyze'? 'Find Defects'?
-            //tsbAnalyze.Image = Properties.Resources.tsb_uni_analyze;
-            //tsbAnalyze.AutoSize = false;
         }
     }
 
@@ -211,60 +173,4 @@ namespace PictureFrame
             }
         }
     }
-
-    //// opens scanner-choosing dialog, scans image, if allowed, and loads it into the picture box.
-    //public class ButtonScannerInterface : ToolStripButton
-    //{
-    //    protected override void OnClick(EventArgs e)
-    //    {
-    //        Form form = this.GetCurrentParent().FindForm();
-    //        if (form is GUIForm)
-    //        {
-    //            DeviceManager manager = new DeviceManager();
-    //            WIA.CommonDialog dialog = new WIA.CommonDialog(); // create a new WIA common dialog box for the user to select a device from
-    //            ImageFile scannedImage = null;
-    //            scannedImage = dialog.ShowAcquireImage(
-    //                        // advanced: try to change the dialog so non-grayscale options are not shown? Here's what dialog can do: https://msdn.microsoft.com/en-us/library/ms630492(v=vs.85).aspx
-    //                        WiaDeviceType.ScannerDeviceType,
-    //                        WiaImageIntent.GrayscaleIntent, // changed from UnspecifiedIntent. Don't know if it matters, the user can choose once the dialog opens...
-    //                        WiaImageBias.MaximizeQuality,
-    //                        FormatID.wiaFormatTIFF, // todo: needed? Not really using the format's full potential, since it's converted to bmp later...but other formats default to low bpi
-    //                        true, true, false);
-    //            if (scannedImage != null)
-    //            {
-    //                //scannedImage.SaveFile("scannedImage.png"); // This is how to save it as a new file, if needed
-    //                (form as GUIForm).PicBox().ArrFromScannedImage(scannedImage); // fff...I completely forgot to write this line and been wondering what the hell was missing...
-    //            }
-    //        }
-    //    }
-    //}
-
-    //// resets contrast and brightness to their default values for the current Image.
-    //public class ButtonResetCB : ToolStripButton
-    //{
-    //    protected override void OnClick(EventArgs e)
-    //    {
-    //        Form form = this.GetCurrentParent().FindForm();
-    //        if (form is GUIForm)
-    //        {
-    //            (form as GUIForm).PicBox().ResetCB();
-    //        }
-    //    }
-    //}
-
-    //public class ButtonAnalyze : ToolStripButton
-    //{
-    //    protected override void OnClick(EventArgs e)
-    //    {
-    //        Form form = this.GetCurrentParent().FindForm();
-    //        if (form is GUIForm)
-    //        {
-    //            (form as GUIForm).PicBox().imgArr.Analyze(); // todo: if image hasn't been loaded yet, an error message should appear instead of the program crashing...
-    //            //(form as GUIForm).PicBox().ImageFromArr(); // update image // note: no longer relevant, working with unrotated image so nothing to update. Unless there's some sort of error checking?
-    //            (form as GUIForm).PicBox().imgArr.Analyze2(); // function split so we can see the rotated image before the rest of the calculations go through. Can be combined again easily enough.
-    //            (form as GUIForm).PicBox().ChangedDefects = true; // on PicBox's next OnPaint, discovered defects will be picked from imgArr and drawn on top of the picture.
-    //            (form as GUIForm).PicBox().Invalidate(); // ...right?
-    //        }
-    //    }
-    //}
 }

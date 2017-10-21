@@ -1,14 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-//using WIA;
-using System.IO;
 
 namespace PictureFrame
 {
@@ -118,104 +110,5 @@ namespace PictureFrame
             }
             ShowStats();
         }
-
-        #region testing
-
-        //// create a new WIA common dialog box for the user to select a device from
-        //WIA.CommonDialog dialog = new WIA.CommonDialog();
-
-        //// debugging button
-        //// previously: testing contrast/brightness
-        //// currently: testing scanner dialog
-        //// select scanner and print some stats
-        //private void button1_Click(object sender, EventArgs e)
-        //{
-        //    try
-        //    {
-        //        // show user the WIA device dialog
-        //        d = dialog.ShowSelectDevice(WiaDeviceType.ScannerDeviceType, true, false);
-
-        //        // check if a device was selected
-        //        if (d != null)
-        //        {
-        //            label1.Text = "selection: success!";
-        //            // Print camera properties
-        //            textBox1.AppendText("\n\n Print properties:\n");
-        //            foreach (Property p in d.Properties)
-        //            {
-        //                textBox1.AppendText(p.Name + ": " + p.get_Value() + "  (" + p.PropertyID + ":" + p.IsReadOnly + ") \n");
-
-        //                //// Update UI
-        //                //if (p.PropertyID == 3) _label = (String)p.get_Value();
-        //                //if (p.PropertyID == 4) _label = _label + " - " + p.get_Value();
-        //                //this.label1.Text = _label;
-        //            }
-
-        //            // Print commands
-        //            textBox1.AppendText("\n\n Print commands:\n");
-        //            foreach (DeviceCommand dvc in d.Commands)
-        //            {
-        //                textBox1.AppendText(dvc.Name + ": " + dvc.Description + "  (" + dvc.CommandID + ") \n");
-        //            }
-
-        //            // Print events
-        //            textBox1.AppendText("\n\n Print events:\n");
-        //            foreach (DeviceEvent dve in d.Events)
-        //            {
-        //                textBox1.AppendText(dve.Name + ": " + dve.Description + "  (" + dve.Type + ") \n");
-        //            }
-
-        //            // Print item properties
-        //            textBox1.AppendText("\n\n Print item properties:\n");
-        //            foreach (Property item in d.Items[1].Properties)
-        //            {
-        //                textBox1.AppendText(item.IsReadOnly + ": " + item.Name + "  (" + item.PropertyID + ") \n");
-        //            }                    
-        //        }
-        //        else // d == null
-        //        {
-        //            textBox1.Text = "";
-        //            label1.Text = "selection: none";
-        //        }
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        MessageBox.Show(ex.Message, "selection: WIA Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
-        //    }
-
-        //}
-
-        // get image from scanner (ability to order it to scan what it has at the time, but also possible to wait or cancel)
-        // todo: move this to toolbar?
-        //private void button2_Click(object sender, EventArgs e)
-        //{
-        //    //if (d == null) // ShowAcquireImage seems to work fine without pre-selection of scanner. That whole section seems only good for the user viewing scanner properties.
-        //    //{
-        //    //    textBox1.Text = "select a scanner first";
-        //    //    return;
-        //    //}
-        //    DeviceManager manager = new DeviceManager();            
-        //    ImageFile scannedImage = null;
-        //    scannedImage = dialog.ShowAcquireImage(
-        //        // advanced: try to change the dialog so non-grayscale options are not shown? Here's what dialog can do: https://msdn.microsoft.com/en-us/library/ms630492(v=vs.85).aspx
-        //                WiaDeviceType.ScannerDeviceType,
-        //                WiaImageIntent.GrayscaleIntent, // changed from UnspecifiedIntent. Don't know if it matters, the user can choose once the dialog opens...
-        //                WiaImageBias.MaximizeQuality,
-        //                FormatID.wiaFormatTIFF, // todo: needed? Not really using the format's full potential, since it's converted to bmp later...but other formats default to low bpi
-        //                true, true, false);
-        //    if (scannedImage != null)
-        //    {
-        //        //scannedImage.SaveFile("scannedImage.png"); // This is how to save it as a new file, if needed
-        //        pictureBox1.ArrFromScannedImage(scannedImage); // fff...I completely forgot to write this line and been wondering what the hell was missing...
-        //    }
-        //}
-        #endregion
-
-        //protected override void OnClosing(CancelEventArgs e)
-        //{
-        //    base.OnClosing(e);
-
-        //    CheckTime.Dump();
-        //}
     }
 }

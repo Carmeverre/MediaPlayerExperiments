@@ -1,14 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Drawing;
 using System.Windows.Forms;
-//using WIA;
-using System.IO;
-using System.Drawing.Imaging;
-using System.Runtime.InteropServices;
 
 namespace PictureFrame
 {
@@ -44,24 +36,6 @@ namespace PictureFrame
         public event MouseEventHandler UpdateMouseStats; // custom event handler, event raised when Stats are updated
         EventArgs ea = EventArgs.Empty;
 
-        //// todo: different source for defects, check compatibility. Class of defect (currently DefectRing) may also be changed so they're drawn differently
-        ////IEnumerable<IDefect> _defects = new List<DefectCircle> { new DefectCircle(100, 100, 58), new DefectCircle(300, 200, 58) }; // test list of defects
-        //// empty lists of defects for compiling. Add/initialize defects here as in the example above and they will be drawn if DoDrawDefects == true
-        //IEnumerable<IDefect> _defects1 = new List<DefectCircle>(); // type 1 defects
-        //IEnumerable<IDefect> _defects2 = new List<DefectCircle>(); // type 2 defects
-        //IEnumerable<IDefect> _defects3 = new List<DefectCircle>(); // type 3 defects
-        //bool DoDrawDefects = true; // change by some means later, like a toggle button / checkbox as with grid.
-        //public bool ChangedDefects = false;
-
-        //ConstRawImageArr crawarr = new ConstRawImageArr(); // rawr! testing with constant arr
-        // these are no longer constants, they depend on minimum and maximum values available in an image...
-        //int MIN_LEFTLIM = -1000;
-        //int MAX_RIGHTLIM = 30000;
-        //int MIN_LIM_DIST = 100; // minimum distance between left and right limits of slope
-        //bool ChangedContrastBrightness = false;
-        //RawImageArr rawarr; // replace with the following:
-        //public CImageData imgArr; // any way to avoid making this public..?
-
 
         public GUIPictureBox()
         {
@@ -91,7 +65,6 @@ namespace PictureFrame
             state.center = new PointF(Image.Width / 2, Image.Height / 2);
             //DoDrawGrid = false; // text of a ToolStripButton depends on this property, shouldn't be reset separately.
             ResetZoom();
-            //LimitContrastBrightness();
         }
 
         public void ResetZoom()
@@ -219,38 +192,7 @@ namespace PictureFrame
             }
             return newCenter;
         }
-
-        //// changes brightness and contrast proportionally to mouse movement and PictureBox size
-        //public void ChangeContrastBrightness(MouseEventArgs e)
-        //{
-        //    // note: can add number to proportion calculation to change sensitivity by a constant. Increase numerator to increase sensitivity, increase denominator to reduce sensitivity.
-        //    // option: change proportion to use constant number of pixels or screen points rather than ClientSize?
-        //    // todo: try and change something about the math so it's not so easy to get seemingly stuck with a black screen..?
-
-        //    Point dist = new Point(e.X - mouseLastP.X, e.Y - mouseLastP.Y);
-        //    if (dist.X == 0 && dist.Y == 0) // small optimization in case contrast and brightness need not be changed...
-        //        return;
-        //    mouseLastP = e.Location; // alternative - only recalculate on mouse up. Not as smooth, but no delay. No longer sifnificant, I moved the update to the right place and it's quick enough now.
-
-        //    // set new brightness and limit values:
-        //    state.leftLim -= (dist.X * (state.rightLim - state.leftLim)) / (ClientSize.Width); // movement across possible brightness line proportional to mouse's movement along PictureBox's width
-        //    if (state.leftLim < MIN_LEFTLIM)
-        //        state.leftLim = MIN_LEFTLIM;
-        //    else if (state.leftLim > MAX_RIGHTLIM - MIN_LIM_DIST)
-        //        state.leftLim = MAX_RIGHTLIM - MIN_LIM_DIST;
-
-        //    // set new contrast and limit values:
-        //    state.rightLim += (dist.Y * (state.rightLim - state.leftLim)) / (ClientSize.Height); // movement across possible contrast line proportional to mouse's movement along PictureBox's height
-        //    // possible contrast here is between rightmost limit and (updated) brightness
-        //    if (state.rightLim < state.leftLim + MIN_LIM_DIST)
-        //        state.leftLim = state.leftLim + MIN_LIM_DIST;
-        //    else if (state.rightLim > MAX_RIGHTLIM)
-        //        state.rightLim = MAX_RIGHTLIM;
-
-        //    ChangedContrastBrightness = true;
-        //    Invalidate(); // actual recalculate happens in OnPaint, brightness/contrast are updated much more responsively
-        //}
-
+        
         // coordinates of mouse relative to the (top left corner of) image (taking into account scale)
         public PointF MouseLocationOnImage(PointF p)
         {
@@ -283,50 +225,9 @@ namespace PictureFrame
                 e.Graphics.Clear(this.BackColor); // otherwise everything is black before an image is loaded
                 return;
             }
-            //if (ChangedContrastBrightness)
-            //{
-            //    Image = CRawImageArr.DisplayableImage(imgArr, state.leftLim, state.rightLim);
-            //    ChangedContrastBrightness = false;
-            //}
             PaintPic(e);
-            //if (DoDrawDefects)
-            //{
-            //    if (ChangedDefects)
-            //    {
-            //        ListDefects();
-            //        ChangedDefects = false;
-            //    }
-            //    PaintDefects(e);
-            //}
         }
-
-        //protected void ListDefects()
-        //{
-        //    // TODO: empty list before adding all the vector's members...unless analyze is only ever meant to be called once?
-        //    int x, y;
-        //    for (int i = 0; i < imgArr.DefectNum(1); i++)
-        //    {
-        //        x = imgArr.DefectCoord(1, i, true);
-        //        y = imgArr.DefectCoord(1, i, false);
-        //        DefectCircle defect = new DefectCircle(x, y, 29 - 7); // todo: get diameter/wall thickness from data
-        //        (_defects1 as List<DefectCircle>).Add(defect);
-        //    }
-        //    for (int i = 0; i < imgArr.DefectNum(2); i++)
-        //    {
-        //        x = imgArr.DefectCoord(2, i, true);
-        //        y = imgArr.DefectCoord(2, i, false);
-        //        DefectCircle defect = new DefectCircle(x, y, 29 - 7);
-        //        (_defects2 as List<DefectCircle>).Add(defect);
-        //    }
-        //    for (int i = 0; i < imgArr.DefectNum(3); i++)
-        //    {
-        //        x = imgArr.DefectCoord(3, i, true);
-        //        y = imgArr.DefectCoord(3, i, false);
-        //        DefectCircle defect = new DefectCircle(x, y, 9); // note: different size. If it's a circle rather than an ellipse, let's have it centered at wall's center and no wider than the wall...
-        //        (_defects3 as List<DefectCircle>).Add(defect);
-        //    }
-        //}
-
+        
         public void PaintPic(PaintEventArgs e)
         {
             base.OnPaint(e); // used to have stackoverflow exception...dunno if this is needed, but MSDN says derived classes should call it...
@@ -335,21 +236,7 @@ namespace PictureFrame
             if (DoDrawGrid && state.scale >= 1)
                 DrawGrid(e.Graphics);
         }
-
-        //public void PaintDefects(PaintEventArgs e)
-        //{
-        //    CoordTransform coordTransform = p => ImageToWindow(p);
-        //    Pen pen = new Pen(Color.Red); // red for spot defect
-        //    foreach (IDefect defect in _defects1)
-        //        defect.Draw(e.Graphics, pen, coordTransform, state.scale); // also pass function for transforming coordinates
-        //    pen.Color = Color.Yellow; // yellow for brightness!
-        //    foreach (IDefect defect in _defects2)
-        //        defect.Draw(e.Graphics, pen, coordTransform, state.scale);
-        //    pen.Color = Color.Turquoise; // blue for highly shifted wall
-        //    foreach (IDefect defect in _defects3)
-        //        defect.Draw(e.Graphics, pen, coordTransform, state.scale);
-        //}
-
+        
         private void DrawImgScaled(PaintEventArgs e)
         {
             e.Graphics.Clip = new Region(ClientRectangle); // This prevents image sliding under toolbar. So long as the ClientSize is kept updated.
@@ -488,218 +375,6 @@ namespace PictureFrame
             // FindForm().Focus(); // the goggles they do nothing. Guess the form can't get focus.
             // Tabbing does make picture box lose focus, though. Added condition in OnMouseWheel so wheel doesn't change zoom when mouse is outside picture box
         }
-        #endregion        
-
-
-        #region image acquisition
-        // stuff to do with loading images from a file (given as Image) or a scanned image (ImageFile)
-
-        //// loads info from file into 2D arr that can be used for contrast/brightness change recalculations etc.
-        //// should be called by new file opening button's click
-        //// current implementation is slow (takes a couple of seconds), but fine if people don't switch images too often
-        //public void ArrFromImage(Image img)
-        //{
-        //    // initialize array dimensions
-        //    //imgArr = new CImageData(img.Width, img.Height); // replaces next line
-        //    //rawarr = new RawImageArr(img.Width, img.Height); // todo: add special case for empty array (if someone tries to open an empty image). Could be an exception otherwise.
-
-        //    // fill the array using image from file...
-        //    if (img.PixelFormat == System.Drawing.Imaging.PixelFormat.Format16bppGrayScale)
-        //    {
-        //        Bitmap clone = new Bitmap(img.Width, img.Height, System.Drawing.Imaging.PixelFormat.Format16bppGrayScale); // not many functions besides bitmap ones...
-        //        using (Graphics g = Graphics.FromImage(clone))
-        //        {
-        //            g.DrawImage(img, new Rectangle(0, 0, clone.Width, clone.Height)); // drawing seems to copy the image...
-        //        }
-        //        ArrFromGrayscaleImage(clone);
-        //    }
-        //    else // any color or nonstandard pixel format
-        //    {
-        //        Bitmap clone = new Bitmap(img.Width, img.Height, System.Drawing.Imaging.PixelFormat.Format48bppRgb); // not many functions besides bitmap ones...
-        //        using (Graphics g = Graphics.FromImage(clone))
-        //        {
-        //            g.DrawImage(img, new Rectangle(0, 0, clone.Width, clone.Height)); // drawing seems to copy the image...
-        //        }
-        //        // seems to work okay... todo: check whether this works for opening an image from file that has alpha.
-        //        ArrFromColorImage(clone);
-        //    }
-        //    //ChangedContrastBrightness = true; // this ensures that image is loaded from array on paint, so colored images are shown as grayscale from the start
-        //    Init(img); // hmm? well...it shows the image once loaded, but doesn't turn colord into grayscale
-        //}
-
-        //// should fill arr from pre-selected or at that time selected scanner        
-        //public void ArrFromScannedImage(ImageFile imgF)
-        //{
-        //    var imageBytes = (byte[])imgF.FileData.get_BinaryData();
-        //    using (var ms = new MemoryStream(imageBytes))
-        //    {
-        //        var img = Image.FromStream(ms);
-        //        // init and fill the array using scannedImage ImageFile...
-        //        ArrFromImage(img);
-        //    }
-        //}
-
-        //// from PixelFormat enum, the only known grayscale format is 16bpp grayscale. Assumes arr dimensions are correctly initialized.
-        //public void ArrFromGrayscaleImage(Bitmap bmp)
-        //{
-        //    //for (int y = 0; y < bmp.Height; y++)
-        //    //{
-        //    //    for (int x = 0; x < bmp.Width; x++)
-        //    //    {
-        //    //        Color c = bmp.GetPixel(x,y);
-        //    //        rawarr.arr[x, y] = c.R; // red component. Assuming all components equal. This is wrong. Color components here are bytes. There must be more depth available...
-        //    //    }
-        //    //}
-
-        //    BitmapData data = bmp.LockBits(new Rectangle(0, 0, bmp.Width, bmp.Height), ImageLockMode.ReadOnly, PixelFormat.Format16bppGrayScale); // read-only this time...and changed the pixel format to what should be provided...
-        //    int stride = data.Stride; // presumably directly proportional to bpp and number of color components
-        //    int colorSum; // or average...
-
-        //    unsafe
-        //    {
-        //        Int16* ptr = (Int16*)data.Scan0; // the problem is likely with byte. Int16 perhaps?
-        //        //// Go through the draw area and set the pixels as they should be
-        //        //for (int y = 0, ny = bmp.Height, nx = bmp.Width; y < ny; y++)
-        //        //{
-        //        //    for (int x = 0; x < nx; x++)
-        //        //    {
-        //        //        // todo: did this work? I don't know, it never actually got turned into this format...
-        //        //        colorSum = ptr[(x * 3) + y * stride / 2];
-        //        //        rawarr.arr[y, x] = colorSum;
-        //        //    }
-        //        //}
-
-        //        // C++ CImageData implementation (untested): [note ptr from previous implementation is still needed]
-        //        short* c_ptr;
-        //        for (int y = 0, ny = bmp.Height, nx = bmp.Width; y < ny; y++)
-        //        {
-        //            c_ptr = imgArr.Line(y);
-        //            for (int x = 0; x < nx; x++)
-        //            {
-        //                colorSum = ptr[(x * 3) + y * stride / 2];
-        //                c_ptr[x] = (short)colorSum; // thereabouts...?
-        //            }
-        //        }
-        //    }
-        //    bmp.UnlockBits(data);
-        //}
-
-        //// assume pre-converted to a particular format..? Format currently used: Format48bppRgb
-        //// todo: probably merge this with the grayscale. Once they're in the same format, the averaging will work for greyscale as well as color and save a bunch of duplication.
-        //// Only loss is in converting grayscale to color. Even the stride length should be the same when locking bits!
-        //public void ArrFromColorImage(Bitmap bmp)
-        //{
-        //    //// changed this to use lock bits after testing
-        //    //for (int y = 0; y < bmp.Height; y++)
-        //    //{
-        //    //    for (int x = 0; x < bmp.Width; x++)
-        //    //    {
-        //    //        Color c = bmp.GetPixel(x, y);
-        //    //        rawarr.arr[y, x] = (c.R + c.G + c.B); // needs /3? nah, let's test with different ranges. This is wrong. Color components here are bytes. There must be more depth available...
-        //    //    }
-        //    //}
-
-        //    BitmapData data = bmp.LockBits(new Rectangle(0, 0, bmp.Width, bmp.Height), ImageLockMode.ReadOnly, PixelFormat.Format48bppRgb); // read-only this time...and changed the pixel format to what should be provided...
-        //    int stride = data.Stride; // width of a single line of pixels (oh...must be in bytes! so...divide by 2 for int16 pointer? Yes! Without that, got access violation)
-        //    int colorSum; // or average...
-
-        //    unsafe
-        //    {
-        //        short* ptr = (short*)data.Scan0; // with byte, the image just looks wrong (of course...doesn't fit PixelFormat), but with Int16/short I get AccessViolation
-        //        //// Go through the draw area and set the pixels as they should be
-        //        //// yuss! Extremely quick loading now!
-        //        //for (int y = 0, ny = bmp.Height, nx = bmp.Width; y < ny; y++)
-        //        //{
-        //        //    for (int x = 0; x < nx; x++)
-        //        //    {
-        //        //        colorSum = ptr[(x * 3) + y * stride / 2]; // red component
-        //        //        colorSum += ptr[(x * 3) + y * stride / 2 + 1]; // green component
-        //        //        colorSum += ptr[(x * 3) + y * stride / 2 + 2]; // blue component
-        //        //        rawarr.arr[y, x] = colorSum;
-        //        //    }
-        //        //}
-
-        //        // C++ CImageData implementation (untested): [note ptr from previous implementation is still needed]
-        //        short* c_ptr;
-        //        for (int y = 0, ny = bmp.Height, nx = bmp.Width; y < ny; y++)
-        //        {
-        //            c_ptr = imgArr.Line(y);
-        //            for (int x = 0; x < nx; x++)
-        //            {
-        //                colorSum = ptr[(x * 3) + y * stride / 2]; // red component
-        //                colorSum += ptr[(x * 3) + y * stride / 2 + 1]; // green component
-        //                colorSum += ptr[(x * 3) + y * stride / 2 + 2]; // blue component
-        //                c_ptr[x] = (short)colorSum; // thereabouts...?
-        //            }
-        //        }
-        //    }
-        //    bmp.UnlockBits(data);
-        //}
-
-        //// TODO
-        //public void ImageFromArr()
-        //{
-        //    //Bitmap img = new Bitmap(Image.Width, Image.Height, PixelFormat.Format16bppGrayScale);
-        //    //BitmapData data = img.LockBits(new Rectangle(0, 0, Width, Height), ImageLockMode.WriteOnly, PixelFormat.Format16bppGrayScale);
-        //    //int stride = data.Stride; // width of a single line of pixels (in bytes, so divide by 2 to get short pointer)
-
-        //    //unsafe
-        //    //{
-        //    //    short* ptr = (short*)data.Scan0; // with byte, the image just looks wrong (of course...doesn't fit PixelFormat), but with Int16/short I get AccessViolation
-        //    //    short* c_ptr;
-        //    //    for (int y = 0, ny = Image.Height, nx = Image.Width; y < ny; y++)
-        //    //    {
-        //    //        c_ptr = imgArr.LineRotated(y);
-        //    //        for (int x = 0; x < nx; x++)
-        //    //        {
-        //    //            ptr[x + y * stride / 2] = c_ptr[x]; // pixel format is grayscale, this should do..?
-        //    //        }
-        //    //    }
-        //    //}
-        //    //img.UnlockBits(data);
-        //    //Image = img;
-        //    //ChangedContrastBrightness = true;
-        //    Invalidate(); // (?) // ALTERNATIVE: comment out everything above that's uncommented, set ChangedContrastBrightness = true, and make it so rotated image is put in m_pImage and not separate thing.
-        //    // as it is, drawing sends argument exception at OnPaint or something...
-        //}
-
         #endregion
-
-        //// finds minimum and maximum values in loaded rawarr and defines MIN_LEFTLIM, MAX_RIGHTLIM, and MIN_LIM_DIST accordingly, and initializes brightness and contrast to the limits.
-        //public void LimitContrastBrightness()
-        //{
-        //    int min = int.MaxValue;
-        //    int max = int.MinValue;
-        //    int temp;
-        //    unsafe
-        //    {
-        //        short* c_ptr;
-        //        for (int y = 0; y < Image.Height; y++)
-        //        {
-        //            c_ptr = imgArr.Line(y);
-        //            for (int x = 0; x < Image.Width; x++)
-        //            {
-        //                temp = c_ptr[x];
-        //                if (min > temp)
-        //                    min = temp;
-        //                if (max < temp)
-        //                    max = temp;
-        //            }
-        //        }
-        //    }
-        //    MIN_LEFTLIM = min;
-        //    MAX_RIGHTLIM = max;
-        //    MIN_LIM_DIST = (max - min) / 100; // dunno if that's a good minimum distance
-        //    state.leftLim = MIN_LEFTLIM;
-        //    state.rightLim = MAX_RIGHTLIM; // assuming the min/max were not outliers, this should do
-        //}
-
-        //public void ResetCB()
-        //{
-        //    state.leftLim = MIN_LEFTLIM;
-        //    state.rightLim = MAX_RIGHTLIM; // assuming the min/max were not outliers, this should do
-        //    ChangedContrastBrightness = true;
-        //    Invalidate();
-        //}
     }
 }
