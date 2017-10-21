@@ -8,6 +8,8 @@ namespace PictureFrame
 
     public class GUIPictureBox : PictureBox
     {
+        public bool isImageLoaded { get; set; }
+
         // image to be drawn and manipulated is found/set at picture box's Image property.
 
         // todo: some things here are public only for debugging buttons, and should be made private / properties with special getter/setters later
@@ -40,6 +42,7 @@ namespace PictureFrame
         public GUIPictureBox()
         {
             Image = null;
+            isImageLoaded = false;
         }
 
         public void Init()

@@ -93,7 +93,7 @@ namespace PictureFrame
                 if (form is GUIForm)
                 {
                     (form as GUIForm).PicBox().Image = new Bitmap(openFileDialog1.FileName); // todo: any way to do this more generally than bitmap? Any need to?
-                    //(form as GUIForm).PicBox().ArrFromImage(new Bitmap(openFileDialog1.FileName)); // note: replaced with image version since I'm not using arr right now
+                    (form as GUIForm).PicBox().isImageLoaded = true;
                     (form as GUIForm).PicBox().Reset();
                 }
                 if (this.GetCurrentParent() is GUIToolbar)
