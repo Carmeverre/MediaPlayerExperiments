@@ -1,0 +1,19 @@
+﻿<Window x:Class="MediaFrame.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:MediaFrame"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="350" Width="525">
+    <DockPanel>
+        <ToolBar DockPanel.Dock="Top" Height="48">
+            <Button Name="tsbNewImg" Width="48" VerticalAlignment="Stretch"></Button>
+            <Button Name="tsbZoomTo1" Width="48" VerticalAlignment="Stretch"></Button>
+            <Button Name="tsbZoomToFit" Width="48" VerticalAlignment="Stretch"></Button>
+            <Button Name="tsbGrid" Width="48" VerticalAlignment="Stretch"></Button>
+            <TextBlock Name="status" HorizontalAlignment="Right" Text="testing"/> <!--hmm, can't get it to stick to the right edge...-->
+        </ToolBar>
+        <local:GuiPictureBox />
+    </DockPanel>
+</Window>
