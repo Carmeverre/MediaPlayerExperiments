@@ -7,13 +7,15 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="350" Width="525">
     <DockPanel>
-        <ToolBar DockPanel.Dock="Top" Height="48">
+        <ToolBar Name="toolStrip" DockPanel.Dock="Top" Height="48">
             <Button Name="tsbNewImg" Width="48" VerticalAlignment="Stretch"></Button>
             <Button Name="tsbZoomTo1" Width="48" VerticalAlignment="Stretch"></Button>
             <Button Name="tsbZoomToFit" Width="48" VerticalAlignment="Stretch"></Button>
             <Button Name="tsbGrid" Width="48" VerticalAlignment="Stretch"></Button>
             <TextBlock Name="status" HorizontalAlignment="Right" Text="testing"/> <!--hmm, can't get it to stick to the right edge...-->
         </ToolBar>
-        <local:GuiPictureBox />
+        <local:GuiPictureBox x:Name="pictureBox"
+                             
+                             />
     </DockPanel>
 </Window>
